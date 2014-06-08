@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using LuaInterface;
 using Myevan;
 
@@ -15,7 +16,16 @@ namespace CruiserConsole
         public bool isGameShut = false;
         public static Lua lua;
         public static Hashtable luaFunctions = null;
-
+        public static string foreground;
+        public static string background;
+        public enum colorCodes 
+        {
+            K, B, G, C, R, M, Y, w, k, b, g, c, r, m, y, W
+        };
+        public static string[] colorTokens = {"/fK","/fB","/fG","/fC","/fR","/fM","/fY","/fw","/fk","/fb","/fg","/fc","/fr","/fm","/fy","/fW",
+                                  "/bK","/bB","/bG","/bC","/bR","/bM","/bY","/bw","/bk","/bb","/bg","/bc","/br","/bm","/by","/bW",
+                                  "/fx","/fX","/bx","/bX"};
+        public static string colorPattern = "(/[fb][KBGCRMYwkbgcrmyWxX]|/x|/X)";
         public void initialize()
         {
             lua = new Lua();
@@ -67,23 +77,23 @@ namespace CruiserConsole
         [AttrLuaFunc("printl", "Print string and New Line", "string")]
         public void printLine(String message)
         {
-            Console.WriteLine(Korean.ReplaceJosa(message));
+            CruiserGame.Write(Korean.ReplaceJosa(message) + "\n");
         }
         [AttrLuaFunc("_print", "Print string", "string")]
         public void print(String message)
         {
-            Console.Write(Korean.ReplaceJosa(message));
+            CruiserGame.Write(Korean.ReplaceJosa(message));
         }
         [AttrLuaFunc("printlw", "Print string and New Line and Wait", "string")]
         public void printLineWait(String message)
         {
-            Console.WriteLine(Korean.ReplaceJosa(message));
+            CruiserGame.Write(Korean.ReplaceJosa(message) + "\n");
             Console.ReadKey(true);
         }
         [AttrLuaFunc("printw", "Print string and Wait", "string")]
         public void printWait(String message)
         {
-            Console.Write(Korean.ReplaceJosa(message));
+            CruiserGame.Write(Korean.ReplaceJosa(message));
             Console.ReadKey(true);
         }
         [AttrLuaFunc("say_depricate", "Print character's dialogue", "string", "string")]
@@ -186,6 +196,13 @@ namespace CruiserConsole
         {
             Console.SetBufferSize(width, height);
         }
+        [AttrLuaFunc("_setdefaultcolor", "set default fg/bg color", "foreground", "background")]
+        public void setDefaultColor(string foreground, string background)
+        {
+            CruiserGame.foreground = foreground;
+            CruiserGame.background = background;
+        }
+
         [AttrLuaFunc("setwindowname", "set the name of window", "name")]
         public void setWindowName(string name)
         {
@@ -207,7 +224,41 @@ namespace CruiserConsole
             return gameData.startDate.AddDays(date).Day;
         }
 
+        public static void Write(String message)
+        {
+            String[] words = Regex.Split(message, CruiserGame.colorPattern);
+            foreach (String word in words) {
+                if (Regex.IsMatch(word, CruiserGame.colorPattern))
+                {
+                    if (word.StartsWith("/f"))
+                    {
+                        if (word.EndsWith("x") || word.EndsWith("X"))
+                        {
+                            Console.ForegroundColor = (System.ConsoleColor)Enum.Parse(typeof(colorCodes), foreground);
+                        }
 
+                        Console.ForegroundColor = (System.ConsoleColor)(int)Enum.Parse(typeof(colorCodes), word.Substring(2));
+                    }
+                    else if (word.StartsWith("/b"))
+                    {
+                        if (word.EndsWith("x") || word.EndsWith("X"))
+                        {
+                            Console.BackgroundColor = (System.ConsoleColor)Enum.Parse(typeof(colorCodes), background);
+                        }
+                        Console.BackgroundColor = (System.ConsoleColor)(int)Enum.Parse(typeof(colorCodes), word.Substring(2));
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = (System.ConsoleColor)Enum.Parse(typeof(colorCodes), foreground);
+                        Console.BackgroundColor = (System.ConsoleColor)Enum.Parse(typeof(colorCodes), background);
+                    }
+                }
+                else
+                {
+                    Console.Write(Korean.ReplaceJosa(word));
+                }
+            }
+        }
 
         public static void registerLuaFunctions(Object pTarget)
         {
