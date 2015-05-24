@@ -73,6 +73,25 @@ namespace Myevan
                         return false;
                     }
                 }
+                else if (inChar >= 0x4E00 && inChar <= 0x9FBF) // 한중일 통합 한자 (CJK Unified Ideographs)
+                {
+                    switch(inChar)
+                    {
+                        case '甲':
+                            return true;
+                        case '乙':
+                            return true;
+                        case '丙':
+                            return true;
+                        case '丁':
+                            return true;
+                        case '戊':
+                            return false;
+                        default:
+                            return true;
+                    }
+                        
+                }
                 else
                 {
                     return false;
@@ -93,6 +112,25 @@ namespace Myevan
                     {
                         return true;
                     }
+                }
+                else if (inChar >= 0x4E00 && inChar <= 0x9FBF)
+                {
+                    switch (inChar)
+                    {
+                        case '甲':
+                            return true;
+                        case '丙':
+                            return true;
+                        case '丁':
+                            return true;
+                        case '乙':
+                            return false;
+                        case '戊':
+                            return false;
+                        default:
+                            return true;
+                    }
+
                 }
                 else
                 {
@@ -124,3 +162,4 @@ namespace Myevan
         static Josa _josa = new Josa();
     }
 }
+
