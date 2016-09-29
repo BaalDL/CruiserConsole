@@ -111,27 +111,6 @@ namespace CruiserConsole
             }
         }
 
-        //public void readLinetoData(ref Lua lua, string lineRead, char[] tokenizer)
-        //{
-        //    string[] tokens = lineRead.Split(tokenizer);
-
-        //    string name = tokens[0].Trim();
-        //    string expression = null;
-        //    if (tokens.Length > 1) expression = tokens[1].Trim();
-
-        //    if (name.Equals("")) { }
-        //    else { lua[name] = expression; }
-        //    else if (name.ToLower().Equals("gamename")) lua["gamename"] = expression;
-        //    else if (name.ToLower().Equals("money")) lua["money"] = Convert.ToInt32(expression);
-        //    else if (name.ToLower().Equals("byss")) lua["byss"] = Convert.ToInt32(expression);
-        //    else if (name.ToLower().Equals("date")) lua["date"] = Convert.ToInt32(expression);
-        //    else if (name.ToLower().Equals("phase")) lua["phase"] = Convert.ToInt32(expression);
-
-        //    else if (name.ToUpper().Equals("MAXMONEY")) lua["maxmoney"] = Convert.ToInt32(expression);
-        //    else if (name.ToUpper().Equals("MAXBYSS")) lua["maxbyss"] = Convert.ToInt32(expression);
-        //    else if (name.ToUpper().Equals("MAXDATE")) lua["maxdate"] = Convert.ToInt32(expression);
-        //    else if (name.ToUpper().Equals("MAXPHASE")) lua["maxphase"] = Convert.ToInt32(expression);
-        //}
     }
     public class CruiserScriptLoadException : Exception
     {

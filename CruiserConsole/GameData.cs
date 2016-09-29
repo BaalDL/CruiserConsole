@@ -8,7 +8,6 @@ namespace CruiserConsole
 {
     class GameData
     {
-        public DateTime startDate;
         public Dictionary<string, string> script;
 
         public bool isDataLoaded = false;
@@ -41,7 +40,6 @@ namespace CruiserConsole
                 throw new CruiserGameShutException("스크립트를 읽던 도중 오류가 발생했습니다.");
             }
 
-            startDate = new DateTime(Convert.ToInt32((string)lua["startyear"]), Convert.ToInt32((string)lua["startmonth"]), Convert.ToInt32((string)lua["startday"]));
         }
     }
 

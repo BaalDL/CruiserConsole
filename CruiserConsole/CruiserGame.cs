@@ -208,21 +208,7 @@ namespace CruiserConsole
         {
             Console.Title = name;
         }
-        [AttrLuaFunc("_getYear", "returns date", "playdate from the beginning")]
-        public int getCurrentYear(int date)
-        {
-            return gameData.startDate.AddDays(date).Year;
-        }
-        [AttrLuaFunc("_getMonth", "returns date", "playdate from the beginning")]
-        public int getCurrentMonth(int date)
-        {
-            return gameData.startDate.AddDays(date).Month;
-        }
-        [AttrLuaFunc("_getDay", "returns date", "playdate from the beginning")]
-        public int getCurrentDay(int date)
-        {
-            return gameData.startDate.AddDays(date).Day;
-        }
+
 
         public static void Write(String message)
         {
