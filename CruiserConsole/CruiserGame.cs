@@ -34,7 +34,7 @@ namespace CruiserConsole
             registerLuaFunctions(this);
             try
             {
-                Console.OutputEncoding = Encoding.GetEncoding("euc-kr");
+                Console.OutputEncoding = Encoding.GetEncoding(949);
                 Console.WriteLine("Loading Games with " + lua["_VERSION"] + "...");
                 gameData = new GameData("scripts\\gamedata.xml", "scripts\\", ref lua);
             }
@@ -78,7 +78,7 @@ namespace CruiserConsole
         {
             try
             {
-                lua.DoString(System.Text.Encoding.GetEncoding("euc-kr").GetBytes(gameData.script[name].ToString()));
+                lua.DoString(System.Text.Encoding.GetEncoding(949).GetBytes(gameData.script[name].ToString()));
                 //lua.DoString(System.Text.Encoding.UTF8.GetBytes(gameData.script[name].ToString()));
                 //lua.DoString(gameData.script[name].ToString());
             }
