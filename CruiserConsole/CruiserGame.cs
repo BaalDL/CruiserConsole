@@ -5,7 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using LuaInterface;
+using NLua;
+using NLua.Exceptions;
 using Myevan;
 
 namespace CruiserConsole
@@ -33,7 +34,8 @@ namespace CruiserConsole
             registerLuaFunctions(this);
             try
             {
-                Console.WriteLine("Loading Games...");
+                Console.OutputEncoding = Encoding.GetEncoding("euc-kr");
+                Console.WriteLine("Loading Games with " + lua["_VERSION"] + "...");
                 gameData = new GameData("scripts\\gamedata.xml", "scripts\\", ref lua);
             }
             catch (CruiserGameShutException e)
@@ -46,6 +48,22 @@ namespace CruiserConsole
         {
             if (!isGameShut)
             {
+                //lua["Csharp1"] = "String 문자열" as string;
+                //lua.DoString(System.Text.Encoding.GetEncoding("euc-kr").GetBytes("Csharp2 = 'String 문자열 abc'"));
+                ////lua.DoString("Csharp2 = 'String 문자열 abc'");
+                //string text = "String 문자열";
+                //Console.WriteLine("Csharp1: Assignment");
+                //Console.WriteLine("Csharp2: DoString");
+                //Console.WriteLine("C# Csharp1: String 문자열 == " + lua["Csharp1"] as string + " -> " + (text.Equals(lua["Csharp1"] as string)).ToString()); // True
+                //Console.WriteLine("C# Csharp2: String 문자열 == " + lua["Csharp2"] as string + " -> " + (text.Equals(lua["Csharp2"] as string)).ToString()); // False
+
+                //Console.WriteLine(Console.InputEncoding);
+                //Console.WriteLine(Console.OutputEncoding);
+                ////Console.WriteLine(System.Text.Encoding.UTF8.GetString(System.Text.Encoding.GetEncoding("euc-kr").GetBytes(lua["Csharp2"] as string))); // False
+                //Console.WriteLine(lua["Csharp2"] as string); // False
+
+                //lua.DoString("print('Lua Csharp1 = ' .. Csharp1)");
+                //lua.DoString("print('Lua Csharp2 = ' .. Csharp2)");
                 executeFunction("startgame");
             }
         }
@@ -60,7 +78,9 @@ namespace CruiserConsole
         {
             try
             {
-                lua.DoString(gameData.script[name].ToString());
+                lua.DoString(System.Text.Encoding.GetEncoding("euc-kr").GetBytes(gameData.script[name].ToString()));
+                //lua.DoString(System.Text.Encoding.UTF8.GetBytes(gameData.script[name].ToString()));
+                //lua.DoString(gameData.script[name].ToString());
             }
             catch (KeyNotFoundException e)
             {
@@ -77,23 +97,23 @@ namespace CruiserConsole
         [AttrLuaFunc("printl", "Print string and New Line", "string")]
         public void printLine(String message)
         {
-            CruiserGame.Write(Korean.ReplaceJosa(message) + "\n");
+            CruiserGame.WriteLine(message);
         }
         [AttrLuaFunc("_print", "Print string", "string")]
         public void print(String message)
         {
-            CruiserGame.Write(Korean.ReplaceJosa(message));
+            CruiserGame.Write(message);
         }
         [AttrLuaFunc("printlw", "Print string and New Line and Wait", "string")]
         public void printLineWait(String message)
         {
-            CruiserGame.Write(Korean.ReplaceJosa(message) + "\n");
+            printLine(message);
             Console.ReadKey(true);
         }
         [AttrLuaFunc("printw", "Print string and Wait", "string")]
         public void printWait(String message)
         {
-            CruiserGame.Write(Korean.ReplaceJosa(message));
+            print(message);
             Console.ReadKey(true);
         }
         [AttrLuaFunc("say_depricate", "Print character's dialogue", "string", "string")]
@@ -244,6 +264,11 @@ namespace CruiserConsole
                     Console.Write(Korean.ReplaceJosa(word));
                 }
             }
+        }
+
+        public static void WriteLine(String message)
+        {
+            Write(message + "\n");
         }
 
         public static void registerLuaFunctions(Object pTarget)
